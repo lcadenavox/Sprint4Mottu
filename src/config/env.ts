@@ -1,5 +1,6 @@
 export type ApiEnvironment = {
   baseURL: string;
+  authMode: 'api' | 'local';
 };
 
 // Dicas de baseURL conforme plataforma:
@@ -11,7 +12,9 @@ export type ApiEnvironment = {
 // Configure via variável pública do Expo:
 //   EXPO_PUBLIC_API_BASE_URL
 const DEFAULT_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'https://localhost:7054';
+const AUTH_MODE = (process.env.EXPO_PUBLIC_AUTH_MODE as 'api' | 'local') || 'local';
 
 export const env: ApiEnvironment = {
   baseURL: DEFAULT_BASE_URL,
+  authMode: AUTH_MODE,
 };

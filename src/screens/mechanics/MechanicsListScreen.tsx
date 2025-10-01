@@ -7,11 +7,10 @@ import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
-// Baseado no Swagger "Moto": /api/Moto
-type Vehicle = { id: number; modelo: string; placa: string };
+type Mechanic = { id: number; nome: string; especialidade: string };
 
-export default function VehiclesListScreen() {
-  const [data, setData] = useState<Vehicle[]>([]);
+export default function MechanicsListScreen() {
+  const [data, setData] = useState<Mechanic[]>([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
   const nav = useNavigation<any>();
@@ -19,7 +18,7 @@ export default function VehiclesListScreen() {
   const load = async () => {
     setLoading(true);
     try {
-  const res = await api.get<Vehicle[]>('/api/Moto');
+      const res = await api.get<Mechanic[]>('/api/Mecanico');
       setData(res.data);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
@@ -35,22 +34,23 @@ export default function VehiclesListScreen() {
 
   const remove = async (id: number) => {
     try {
-      await api.delete(`/api/Moto/${id}`);
+      await api.delete(`/api/Mecanico/${id}`);
       setData((old) => old.filter((v) => v.id !== id));
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao excluir');
     }
   };
 
-  if (loading) return (
-    <Screen>
-      <ActivityIndicator />
-    </Screen>
-  );
+  if (loading)
+    return (
+      <Screen>
+        <ActivityIndicator />
+      </Screen>
+    );
 
   return (
     <Screen>
-  <ThemedButton title="Nova moto" onPress={() => nav.navigate('VehicleForm')} />
+      <ThemedButton title="Novo mecânico" onPress={() => nav.navigate('MechanicForm')} />
       <FlatList
         style={{ marginTop: 12 }}
         data={data}
@@ -58,7 +58,7 @@ export default function VehiclesListScreen() {
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
         renderItem={({ item }) => (
           <Pressable
-            onPress={() => nav.navigate('VehicleForm', { id: item.id })}
+            onPress={() => nav.navigate('MechanicForm', { id: item.id })}
             style={{
               borderWidth: 1,
               borderColor: theme.colors.border,
@@ -67,8 +67,8 @@ export default function VehiclesListScreen() {
               backgroundColor: theme.colors.surface,
             }}
           >
-            <ThemedText style={{ fontWeight: '700' }}>{item.modelo}</ThemedText>
-            <ThemedText>Placa: {item.placa}</ThemedText>
+            <ThemedText style={{ fontWeight: '700' }}>{item.nome}</ThemedText>
+            <ThemedText>Especialidade: {item.especialidade}</ThemedText>
             <View style={{ height: 8 }} />
             <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
           </Pressable>

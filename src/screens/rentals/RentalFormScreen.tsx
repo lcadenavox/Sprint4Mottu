@@ -10,11 +10,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { api } from '../../services/api';
 import { useRoute } from '@react-navigation/native';
 
+// Baseado no Swagger "Oficina": /api/Oficina
 const schema = z.object({
-  vehicleId: z.coerce.number().int().positive('Informe o veículo'),
-  customerName: z.string().min(2, 'Informe o cliente'),
-  startDate: z.string().min(10, 'Informe a data de início (YYYY-MM-DD)'),
-  endDate: z.string().optional(),
+  nome: z.string().min(2, 'Informe o nome da oficina'),
+  endereco: z.string().min(3, 'Informe o endereço'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -24,7 +23,7 @@ export default function RentalFormScreen() {
   const id = route.params?.id as number | undefined;
   const { formState, setValue, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
-    defaultValues: { vehicleId: 0, customerName: '', startDate: '', endDate: '' },
+    defaultValues: { nome: '', endereco: '' },
   });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
@@ -33,12 +32,10 @@ export default function RentalFormScreen() {
     if (!id) return;
     setFetching(true);
     try {
-      const res = await api.get(`/api/rentals/${id}`);
+      const res = await api.get(`/api/Oficina/${id}`);
       reset({
-        vehicleId: res.data.vehicleId,
-        customerName: res.data.customerName,
-        startDate: res.data.startDate?.slice(0, 10) || '',
-        endDate: res.data.endDate?.slice(0, 10) || '',
+        nome: res.data.nome,
+        endereco: res.data.endereco,
       });
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao carregar');
@@ -54,8 +51,8 @@ export default function RentalFormScreen() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      if (id) await api.put(`/api/rentals/${id}`, data);
-      else await api.post('/api/rentals', data);
+  if (id) await api.put(`/api/Oficina/${id}`, data);
+  else await api.post('/api/Oficina', data);
       Alert.alert('Sucesso', 'Dados salvos com sucesso');
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao salvar');
@@ -75,30 +72,17 @@ export default function RentalFormScreen() {
   return (
     <Screen>
       <ThemedText style={{ fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
-        {id ? 'Editar aluguel' : 'Novo aluguel'}
+  {id ? 'Editar oficina' : 'Nova oficina'}
       </ThemedText>
       <ThemedTextInput
-        label="ID do Veículo"
-        keyboardType="numeric"
-        onChangeText={(t) => setValue('vehicleId', Number(t), { shouldValidate: true })}
-        error={formState.errors.vehicleId?.message}
+        label="Nome"
+        onChangeText={(t) => setValue('nome', t, { shouldValidate: true })}
+        error={formState.errors.nome?.message}
       />
       <ThemedTextInput
-        label="Cliente"
-        onChangeText={(t) => setValue('customerName', t, { shouldValidate: true })}
-        error={formState.errors.customerName?.message}
-      />
-      <ThemedTextInput
-        label="Data início"
-        placeholder="YYYY-MM-DD"
-        onChangeText={(t) => setValue('startDate', t, { shouldValidate: true })}
-        error={formState.errors.startDate?.message}
-      />
-      <ThemedTextInput
-        label="Data fim (opcional)"
-        placeholder="YYYY-MM-DD"
-        onChangeText={(t) => setValue('endDate', t, { shouldValidate: true })}
-        error={formState.errors.endDate?.message}
+        label="Endereço"
+        onChangeText={(t) => setValue('endereco', t, { shouldValidate: true })}
+        error={formState.errors.endereco?.message}
       />
       <View style={{ height: 12 }} />
   <ThemedButton title="Salvar" onPress={handleSubmit(onSubmit as any)} loading={loading} />

@@ -7,7 +7,8 @@ import { api } from '../../services/api';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
-type Rental = { id: number; vehicleId: number; customerName: string; startDate: string; endDate?: string };
+// Baseado no Swagger "Oficina": /api/Oficina
+type Rental = { id: number; nome: string; endereco: string };
 
 export default function RentalsListScreen() {
   const [data, setData] = useState<Rental[]>([]);
@@ -18,7 +19,7 @@ export default function RentalsListScreen() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Rental[]>('/api/rentals');
+  const res = await api.get<Rental[]>('/api/Oficina');
       setData(res.data);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
@@ -34,7 +35,7 @@ export default function RentalsListScreen() {
 
   const remove = async (id: number) => {
     try {
-      await api.delete(`/api/rentals/${id}`);
+      await api.delete(`/api/Oficina/${id}`);
       setData((old) => old.filter((v) => v.id !== id));
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao excluir');
@@ -49,7 +50,7 @@ export default function RentalsListScreen() {
 
   return (
     <Screen>
-      <ThemedButton title="Novo aluguel" onPress={() => nav.navigate('RentalForm')} />
+  <ThemedButton title="Nova oficina" onPress={() => nav.navigate('RentalForm')} />
       <FlatList
         style={{ marginTop: 12 }}
         data={data}
@@ -66,10 +67,8 @@ export default function RentalsListScreen() {
               backgroundColor: theme.colors.surface,
             }}
           >
-            <ThemedText style={{ fontWeight: '700' }}>{item.customerName}</ThemedText>
-            <ThemedText>
-              {new Date(item.startDate).toLocaleDateString()} {item.endDate ? `- ${new Date(item.endDate).toLocaleDateString()}` : ''}
-            </ThemedText>
+            <ThemedText style={{ fontWeight: '700' }}>{item.nome}</ThemedText>
+            <ThemedText>Endereço: {item.endereco}</ThemedText>
             <View style={{ height: 8 }} />
             <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
           </Pressable>

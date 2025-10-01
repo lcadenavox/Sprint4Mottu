@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, STORAGE_KEYS } from '../services/api';
+import { env } from '../config/env';
 
 type User = {
   id: string;
@@ -50,13 +51,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = useCallback(async (cred: Credentials) => {
     setLoading(true);
     try {
-      // Adjust routes to match your API contract
-      const res = await api.post('/api/auth/login', cred);
-      const { token: tkn, user: usr } = res.data;
-      setToken(tkn);
-      setUser(usr);
-      await AsyncStorage.setItem(STORAGE_KEYS.token, tkn);
-      await AsyncStorage.setItem('@app/user', JSON.stringify(usr));
+      if (env.authMode === 'api') {
+        const res = await api.post('/api/auth/login', cred);
+        const { token: tkn, user: usr } = res.data;
+        setToken(tkn);
+        setUser(usr);
+        await AsyncStorage.setItem(STORAGE_KEYS.token, tkn);
+        await AsyncStorage.setItem('@app/user', JSON.stringify(usr));
+      } else {
+        // Fallback local auth (apenas para desenvolvimento quando a API não tem endpoints de auth)
+        const fakeToken = 'dev-token';
+        const fakeUser = { id: '1', name: 'Dev User', email: cred.email };
+        setToken(fakeToken);
+        setUser(fakeUser);
+        await AsyncStorage.setItem(STORAGE_KEYS.token, fakeToken);
+        await AsyncStorage.setItem('@app/user', JSON.stringify(fakeUser));
+      }
     } finally {
       setLoading(false);
     }
@@ -65,12 +75,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const register = useCallback(async (data: RegisterInput) => {
     setLoading(true);
     try {
-      const res = await api.post('/api/auth/register', data);
-      const { token: tkn, user: usr } = res.data;
-      setToken(tkn);
-      setUser(usr);
-      await AsyncStorage.setItem(STORAGE_KEYS.token, tkn);
-      await AsyncStorage.setItem('@app/user', JSON.stringify(usr));
+      if (env.authMode === 'api') {
+        const res = await api.post('/api/auth/register', data);
+        const { token: tkn, user: usr } = res.data;
+        setToken(tkn);
+        setUser(usr);
+        await AsyncStorage.setItem(STORAGE_KEYS.token, tkn);
+        await AsyncStorage.setItem('@app/user', JSON.stringify(usr));
+      } else {
+        // Fallback local: cadastro fictício direto no client
+        const fakeToken = 'dev-token';
+        const fakeUser = { id: '1', name: data.name, email: data.email };
+        setToken(fakeToken);
+        setUser(fakeUser);
+        await AsyncStorage.setItem(STORAGE_KEYS.token, fakeToken);
+        await AsyncStorage.setItem('@app/user', JSON.stringify(fakeUser));
+      }
     } finally {
       setLoading(false);
     }

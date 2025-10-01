@@ -11,18 +11,18 @@ import { api } from '../../services/api';
 import { useRoute } from '@react-navigation/native';
 
 const schema = z.object({
-  modelo: z.string().min(2, 'Informe o modelo'),
-  placa: z.string().min(7, 'Informe a placa'),
+  nome: z.string().min(2, 'Informe o nome do depósito'),
+  endereco: z.string().min(3, 'Informe o endereço'),
 });
 
 type FormData = z.infer<typeof schema>;
 
-export default function VehicleFormScreen() {
+export default function DepositFormScreen() {
   const route = useRoute<any>();
   const id = route.params?.id as number | undefined;
   const { formState, setValue, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues: { modelo: '', placa: '' },
+    defaultValues: { nome: '', endereco: '' },
   });
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
@@ -31,8 +31,8 @@ export default function VehicleFormScreen() {
     if (!id) return;
     setFetching(true);
     try {
-  const res = await api.get(`/api/Moto/${id}`);
-  reset({ modelo: res.data.modelo, placa: res.data.placa });
+      const res = await api.get(`/api/Deposito/${id}`);
+      reset({ nome: res.data.nome, endereco: res.data.endereco });
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao carregar');
     } finally {
@@ -47,8 +47,8 @@ export default function VehicleFormScreen() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-  if (id) await api.put(`/api/Moto/${id}`, data);
-  else await api.post('/api/Moto', data);
+      if (id) await api.put(`/api/Deposito/${id}`, data);
+      else await api.post('/api/Deposito', data);
       Alert.alert('Sucesso', 'Dados salvos com sucesso');
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao salvar');
@@ -68,18 +68,17 @@ export default function VehicleFormScreen() {
   return (
     <Screen>
       <ThemedText style={{ fontSize: 20, fontWeight: '700', marginBottom: 8 }}>
-  {id ? 'Editar moto' : 'Nova moto'}
+        {id ? 'Editar depósito' : 'Novo depósito'}
       </ThemedText>
       <ThemedTextInput
-        label="Modelo"
-        onChangeText={(t) => setValue('modelo', t, { shouldValidate: true })}
-        error={formState.errors.modelo?.message}
+        label="Nome"
+        onChangeText={(t) => setValue('nome', t, { shouldValidate: true })}
+        error={formState.errors.nome?.message}
       />
       <ThemedTextInput
-        label="Placa"
-        autoCapitalize="characters"
-        onChangeText={(t) => setValue('placa', t, { shouldValidate: true })}
-        error={formState.errors.placa?.message}
+        label="Endereço"
+        onChangeText={(t) => setValue('endereco', t, { shouldValidate: true })}
+        error={formState.errors.endereco?.message}
       />
       <View style={{ height: 12 }} />
       <ThemedButton title="Salvar" onPress={handleSubmit(onSubmit)} loading={loading} />

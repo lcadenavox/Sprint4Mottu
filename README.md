@@ -2,7 +2,7 @@
 
 Este app é a entrega intermediária da 3ª Sprint, com:
 - Login, Cadastro e Logout
-- Duas funcionalidades completas integradas com a API (Veículos e Aluguéis): Listar, Criar, Editar, Excluir
+- Três funcionalidades completas integradas com a API (Motos, Mecânicos e Depósitos): Listar, Criar, Editar, Excluir
 - Validações de formulários, mensagens de erro e indicadores de carregamento
 - Tema claro/escuro e componentes reutilizáveis
 - Arquitetura organizada (contexts, services, navigation, screens, components)
@@ -28,15 +28,14 @@ O link informado foi o Swagger: `https://localhost:7054/swagger/index.html`. Aju
 Defina via variável pública do Expo: `EXPO_PUBLIC_API_BASE_URL`. Ex.:
 
 ```
-$env:EXPO_PUBLIC_API_BASE_URL="http://10.0.2.2:7054"; npm run start
+$env:EXPO_PUBLIC_API_BASE_URL="http://10.0.2.2:7054"; $env:EXPO_PUBLIC_AUTH_MODE="local"; npm run start
 ```
 
-No código, os endpoints estão como exemplo:
-- Auth: `/api/auth/login`, `/api/auth/register`
-- Veículos: `/api/vehicles` (GET/POST), `/api/vehicles/{id}` (GET/PUT/DELETE)
-- Aluguéis: `/api/rentals` (GET/POST), `/api/rentals/{id}` (GET/PUT/DELETE)
-
-Adequar aos caminhos reais do seu Swagger caso sejam diferentes.
+No código, os endpoints foram alinhados ao seu Swagger:
+- Moto: `/api/Moto` e `/api/Moto/{id}` (CRUD)
+- Mecânico: `/api/Mecanico` e `/api/Mecanico/{id}` (CRUD)
+- Depósito: `/api/Deposito` e `/api/Deposito/{id}` (CRUD)
+- Auth: fallback local por padrão (`EXPO_PUBLIC_AUTH_MODE=local`), pois sua API não expõe endpoints de autenticação.
 
 ## Rodando o app
 1. Instale dependências: `npm install`
