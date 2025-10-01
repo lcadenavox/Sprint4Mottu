@@ -74,7 +74,7 @@ export default function MechanicsListScreen() {
             <ThemedText style={{ fontWeight: '700' }}>{item.nome}</ThemedText>
             <ThemedText>Especialidade: {item.especialidade}</ThemedText>
             <View style={{ height: 8 }} />
-            <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
+            <ThemedButton title="Excluir" onPress={() => remove(item.id)} variant="danger" />
           </Pressable>
         )}
       />

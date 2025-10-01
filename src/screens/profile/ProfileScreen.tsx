@@ -14,8 +14,18 @@ export default function ProfileScreen() {
       <ThemedText>Nome: {user?.name}</ThemedText>
       <ThemedText>Email: {user?.email}</ThemedText>
       <ThemedText style={{ marginVertical: 12 }}>Tema atual: {mode}</ThemedText>
-      <ThemedButton title="Alternar tema" onPress={toggle} />
-      <ThemedButton title="Sair" onPress={logout} loading={loading} style={{ marginTop: 12 }} />
+      <ThemedButton
+        title="Alternar tema"
+        onPress={toggle}
+        style={{ backgroundColor: '#1e40af' }}
+      />
+      <ThemedButton
+        title="Sair"
+        onPress={logout}
+        loading={loading}
+        variant="danger"
+        style={{ marginTop: 12 }}
+      />
     </Screen>
   );
 }

@@ -76,7 +76,7 @@ export default function VehiclesListScreen() {
             <ThemedText style={{ fontWeight: '700' }}>{item.marca} {item.modelo}</ThemedText>
             <ThemedText>Ano: {item.ano}</ThemedText>
             <View style={{ height: 8 }} />
-            <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
+            <ThemedButton title="Excluir" onPress={() => remove(item.id)} variant="danger" />
           </Pressable>
         )}
       />

@@ -19,10 +19,14 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const AppTabs = () => {
+  const { theme } = useTheme();
   return (
     <Tab.Navigator
       screenOptions={({ route }: { route: { name: string } }) => ({
         headerShown: false,
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.secondary,
+        tabBarStyle: { backgroundColor: theme.colors.surface, borderTopColor: theme.colors.border },
         tabBarIcon: ({ color, size }: { color: string; size: number }) => {
           let iconName: string = 'list';
           if (route.name === 'Motos') iconName = 'car';
@@ -43,13 +47,19 @@ const AppTabs = () => {
 
 export default function RootNavigation() {
   const { token, initialized } = useAuth();
-  const { mode } = useTheme();
+  const { mode, theme } = useTheme();
   if (!initialized) return null; // could show splash/loading
 
   return (
     <NavigationContainer theme={mode === 'dark' ? DarkTheme : DefaultTheme}>
       {token ? (
-        <Stack.Navigator>
+        <Stack.Navigator
+          screenOptions={{
+            headerTintColor: theme.colors.primary,
+            headerStyle: { backgroundColor: theme.colors.surface },
+            headerTitleStyle: { color: theme.colors.text },
+          }}
+        >
           <Stack.Screen name="Home" component={AppTabs} options={{ headerShown: false }} />
           <Stack.Screen name="VehicleForm" component={VehicleFormScreen} options={{ title: 'Moto' }} />
           <Stack.Screen name="MechanicForm" component={MechanicFormScreen} options={{ title: 'Mecânico' }} />

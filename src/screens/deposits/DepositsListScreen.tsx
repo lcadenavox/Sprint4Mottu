@@ -74,7 +74,7 @@ export default function DepositsListScreen() {
             <ThemedText style={{ fontWeight: '700' }}>{item.nome}</ThemedText>
             <ThemedText>Endereço: {item.endereco}</ThemedText>
             <View style={{ height: 8 }} />
-            <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
+            <ThemedButton title="Excluir" onPress={() => remove(item.id)} variant="danger" />
           </Pressable>
         )}
       />

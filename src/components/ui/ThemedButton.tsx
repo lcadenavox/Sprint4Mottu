@@ -8,18 +8,20 @@ type Props = {
   disabled?: boolean;
   loading?: boolean;
   style?: ViewStyle;
+  variant?: 'primary' | 'danger';
 };
 
-export const ThemedButton: React.FC<Props> = ({ title, onPress, disabled, loading, style }) => {
+export const ThemedButton: React.FC<Props> = ({ title, onPress, disabled, loading, style, variant = 'primary' }) => {
   const { theme } = useTheme();
   const isDisabled = disabled || loading;
+  const bg = variant === 'danger' ? theme.colors.danger : theme.colors.primary;
   return (
     <Pressable
       onPress={onPress}
       disabled={isDisabled}
       style={({ pressed }) => [
         {
-          backgroundColor: isDisabled ? theme.colors.secondary : theme.colors.primary,
+          backgroundColor: isDisabled ? theme.colors.secondary : bg,
           paddingVertical: 12,
           alignItems: 'center',
           borderRadius: 8,

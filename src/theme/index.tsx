@@ -17,25 +17,25 @@ export type Theme = {
 const light: Theme = {
   colors: {
     background: '#ffffff',
-    text: '#111827',
-    primary: '#2563eb',
+    text: '#0b0b0b',
+    primary: '#16a34a',
     secondary: '#6b7280',
-    surface: '#f3f4f6',
+    surface: '#f8fafc',
     border: '#e5e7eb',
-    danger: '#dc2626',
+    danger: '#ef4444',
     success: '#16a34a',
   },
 };
 
 const dark: Theme = {
   colors: {
-    background: '#0b1220',
+    background: '#000000',
     text: '#e5e7eb',
-    primary: '#60a5fa',
+    primary: '#22c55e',
     secondary: '#9ca3af',
-    surface: '#111827',
+    surface: '#0f172a',
     border: '#1f2937',
-    danger: '#f87171',
+    danger: '#ef4444',
     success: '#34d399',
   },
 };
