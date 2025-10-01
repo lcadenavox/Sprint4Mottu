@@ -42,8 +42,19 @@ const toApi = (m: MotoCreate | Moto): { marca: string; modelo: string; ano: numb
 
 export const motoService = {
   list: async (): Promise<Moto[]> => {
-    const data = await httpGet<ApiMoto[]>(base);
-    return data.map(fromApi);
+    const data = await httpGet<any>(base);
+    const arr: ApiMoto[] = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.$values)
+      ? data.$values
+      : Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.content)
+      ? data.content
+      : [];
+    return arr.map(fromApi);
   },
   get: async (id: number): Promise<Moto> => {
     const data = await httpGet<ApiMoto>(`${base}/${id}`);

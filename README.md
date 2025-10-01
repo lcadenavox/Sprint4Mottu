@@ -13,7 +13,7 @@ Este app é a entrega intermediária da 3ª Sprint, com:
 - `src/contexts/AuthContext.tsx` – autenticação, persistência de token, login/cadastro/logout
 - `src/theme/` – tema claro/escuro e hook `useTheme`
 - `src/navigation/` – navegação: Auth stack + App tabs + formulários
-- `src/screens/` – telas de Auth, Veículos, Aluguéis
+- `src/screens/` – telas de Auth, Motos, Mecânicos e Depósitos
 - `src/components/` – componentes de UI temáticos
 
 ## Backend/API
@@ -48,7 +48,12 @@ Se seu backend usa HTTPS com certificado autoassinado, o app no dispositivo pode
 - Prefira HTTP somente no ambiente de desenvolvimento
 - Ou instale um certificado confiável no emulador/dispositivo
 
+## CORS no Web
+Se for rodar no Web com `https://localhost:7054`, habilite CORS no backend (.NET) liberando o origin do Expo Web (ex.: `http://localhost:8081`) e mantendo `app.UseCors(...)` antes de `MapControllers()`. Alternativamente, use o proxy de dev incluído (`dev-proxy.cjs`).
+
+## Serviços e mapeamento de propriedades
+A API .NET pode retornar PascalCase (Id, Nome, ...) e o app usa camelCase (id, nome, ...). Os serviços dos recursos fazem o mapeamento automático tanto na leitura (fromApi) quanto no envio (toApi), além de suportar respostas com array direto ou wrappers comuns (`$values`, `items`, `data`, `content`).
+
 ## Melhorias futuras
-- Listas de seleção (ex.: buscar veículos para escolher no formulário de Aluguéis)
 - Testes unitários e E2E
 - Internacionalização e acessibilidade

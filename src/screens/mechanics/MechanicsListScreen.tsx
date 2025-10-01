@@ -12,22 +12,24 @@ type Mechanic = Mecanico;
 export default function MechanicsListScreen() {
   const [data, setData] = useState<Mechanic[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const { theme } = useTheme();
   const nav = useNavigation<any>();
 
-  const load = async () => {
-    setLoading(true);
+  const load = async (pull = false) => {
+    pull ? setRefreshing(true) : setLoading(true);
     try {
       const res = await mecanicoService.list();
       setData(res);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
     } finally {
-      setLoading(false);
+      pull ? setRefreshing(false) : setLoading(false);
     }
   };
 
   useEffect(() => {
+    load();
     const unsubscribe = nav.addListener('focus', load);
     return unsubscribe;
   }, [nav]);
@@ -55,6 +57,8 @@ export default function MechanicsListScreen() {
         style={{ marginTop: 12 }}
         data={data}
         keyExtractor={(i) => String(i.id)}
+        refreshing={refreshing}
+        onRefresh={() => load(true)}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
         renderItem={({ item }) => (
           <Pressable

@@ -33,8 +33,19 @@ const toApi = (m: MecanicoCreate | Mecanico): { nome: string; especialidade: str
 
 export const mecanicoService = {
   list: async (): Promise<Mecanico[]> => {
-    const data = await httpGet<ApiMecanico[]>(base);
-    return data.map(fromApi);
+    const data = await httpGet<any>(base);
+    const arr: ApiMecanico[] = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.$values)
+      ? data.$values
+      : Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.content)
+      ? data.content
+      : [];
+    return arr.map(fromApi);
   },
   get: async (id: number): Promise<Mecanico> => {
     const data = await httpGet<ApiMecanico>(`${base}/${id}`);

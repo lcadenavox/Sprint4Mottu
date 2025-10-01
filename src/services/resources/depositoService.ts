@@ -33,8 +33,19 @@ const toApi = (d: DepositoCreate | Deposito): { nome: string; endereco: string }
 
 export const depositoService = {
   list: async (): Promise<Deposito[]> => {
-    const data = await httpGet<ApiDeposito[]>(base);
-    return data.map(fromApi);
+    const data = await httpGet<any>(base);
+    const arr: ApiDeposito[] = Array.isArray(data)
+      ? data
+      : Array.isArray(data?.$values)
+      ? data.$values
+      : Array.isArray(data?.items)
+      ? data.items
+      : Array.isArray(data?.data)
+      ? data.data
+      : Array.isArray(data?.content)
+      ? data.content
+      : [];
+    return arr.map(fromApi);
   },
   get: async (id: number): Promise<Deposito> => {
     const data = await httpGet<ApiDeposito>(`${base}/${id}`);

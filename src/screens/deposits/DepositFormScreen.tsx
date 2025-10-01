@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { depositoService } from '../../services/resources/depositoService';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const schema = z.object({
   nome: z.string().min(2, 'Informe o nome do depósito'),
@@ -19,6 +19,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function DepositFormScreen() {
   const route = useRoute<any>();
+  const nav = useNavigation<any>();
   const id = route.params?.id as number | undefined;
   const { formState, setValue, handleSubmit, reset } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -50,6 +51,7 @@ export default function DepositFormScreen() {
       if (id) await depositoService.update(id, data);
       else await depositoService.create(data);
       Alert.alert('Sucesso', 'Dados salvos com sucesso');
+      nav.goBack();
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao salvar');
     } finally {
