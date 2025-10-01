@@ -3,12 +3,12 @@ import { ActivityIndicator, Alert, FlatList, Pressable, View } from 'react-nativ
 import { Screen } from '../../components/layout/Screen';
 import { ThemedText } from '../../components/ui/ThemedText';
 import { ThemedButton } from '../../components/ui/ThemedButton';
-import { api } from '../../services/api';
+import { motoService, Moto } from '../../services/resources/motoService';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
 // Baseado no Swagger "Moto": /api/Moto
-type Vehicle = { id: number; modelo: string; placa: string };
+type Vehicle = Moto;
 
 export default function VehiclesListScreen() {
   const [data, setData] = useState<Vehicle[]>([]);
@@ -19,8 +19,8 @@ export default function VehiclesListScreen() {
   const load = async () => {
     setLoading(true);
     try {
-  const res = await api.get<Vehicle[]>('/api/Moto');
-      setData(res.data);
+      const res = await motoService.list();
+      setData(res);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
     } finally {
@@ -35,7 +35,7 @@ export default function VehiclesListScreen() {
 
   const remove = async (id: number) => {
     try {
-      await api.delete(`/api/Moto/${id}`);
+      await motoService.remove(id);
       setData((old) => old.filter((v) => v.id !== id));
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao excluir');
@@ -67,8 +67,8 @@ export default function VehiclesListScreen() {
               backgroundColor: theme.colors.surface,
             }}
           >
-            <ThemedText style={{ fontWeight: '700' }}>{item.modelo}</ThemedText>
-            <ThemedText>Placa: {item.placa}</ThemedText>
+            <ThemedText style={{ fontWeight: '700' }}>{item.marca} {item.modelo}</ThemedText>
+            <ThemedText>Ano: {item.ano}</ThemedText>
             <View style={{ height: 8 }} />
             <ThemedButton title="Excluir" onPress={() => remove(item.id)} />
           </Pressable>

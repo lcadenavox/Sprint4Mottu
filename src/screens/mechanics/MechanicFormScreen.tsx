@@ -7,7 +7,7 @@ import { ThemedButton } from '../../components/ui/ThemedButton';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { api } from '../../services/api';
+import { mecanicoService } from '../../services/resources/mecanicoService';
 import { useRoute } from '@react-navigation/native';
 
 const schema = z.object({
@@ -31,8 +31,8 @@ export default function MechanicFormScreen() {
     if (!id) return;
     setFetching(true);
     try {
-      const res = await api.get(`/api/Mecanico/${id}`);
-      reset({ nome: res.data.nome, especialidade: res.data.especialidade });
+      const res = await mecanicoService.get(id);
+      reset({ nome: res.nome, especialidade: res.especialidade });
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao carregar');
     } finally {
@@ -47,8 +47,8 @@ export default function MechanicFormScreen() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      if (id) await api.put(`/api/Mecanico/${id}`, data);
-      else await api.post('/api/Mecanico', data);
+      if (id) await mecanicoService.update(id, data);
+      else await mecanicoService.create(data);
       Alert.alert('Sucesso', 'Dados salvos com sucesso');
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao salvar');

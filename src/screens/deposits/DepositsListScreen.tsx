@@ -3,11 +3,11 @@ import { ActivityIndicator, Alert, FlatList, Pressable, View } from 'react-nativ
 import { Screen } from '../../components/layout/Screen';
 import { ThemedText } from '../../components/ui/ThemedText';
 import { ThemedButton } from '../../components/ui/ThemedButton';
-import { api } from '../../services/api';
+import { depositoService, Deposito } from '../../services/resources/depositoService';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
-type Deposit = { id: number; nome: string; endereco: string };
+type Deposit = Deposito;
 
 export default function DepositsListScreen() {
   const [data, setData] = useState<Deposit[]>([]);
@@ -18,8 +18,8 @@ export default function DepositsListScreen() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Deposit[]>('/api/Deposito');
-      setData(res.data);
+      const res = await depositoService.list();
+      setData(res);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
     } finally {
@@ -34,7 +34,7 @@ export default function DepositsListScreen() {
 
   const remove = async (id: number) => {
     try {
-      await api.delete(`/api/Deposito/${id}`);
+      await depositoService.remove(id);
       setData((old) => old.filter((v) => v.id !== id));
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao excluir');

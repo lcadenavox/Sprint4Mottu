@@ -3,11 +3,11 @@ import { ActivityIndicator, Alert, FlatList, Pressable, View } from 'react-nativ
 import { Screen } from '../../components/layout/Screen';
 import { ThemedText } from '../../components/ui/ThemedText';
 import { ThemedButton } from '../../components/ui/ThemedButton';
-import { api } from '../../services/api';
+import { mecanicoService, Mecanico } from '../../services/resources/mecanicoService';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '../../theme';
 
-type Mechanic = { id: number; nome: string; especialidade: string };
+type Mechanic = Mecanico;
 
 export default function MechanicsListScreen() {
   const [data, setData] = useState<Mechanic[]>([]);
@@ -18,8 +18,8 @@ export default function MechanicsListScreen() {
   const load = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Mechanic[]>('/api/Mecanico');
-      setData(res.data);
+      const res = await mecanicoService.list();
+      setData(res);
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Não foi possível carregar');
     } finally {
@@ -34,7 +34,7 @@ export default function MechanicsListScreen() {
 
   const remove = async (id: number) => {
     try {
-      await api.delete(`/api/Mecanico/${id}`);
+      await mecanicoService.remove(id);
       setData((old) => old.filter((v) => v.id !== id));
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao excluir');

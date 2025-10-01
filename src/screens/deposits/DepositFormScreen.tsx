@@ -7,7 +7,7 @@ import { ThemedButton } from '../../components/ui/ThemedButton';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { api } from '../../services/api';
+import { depositoService } from '../../services/resources/depositoService';
 import { useRoute } from '@react-navigation/native';
 
 const schema = z.object({
@@ -31,8 +31,8 @@ export default function DepositFormScreen() {
     if (!id) return;
     setFetching(true);
     try {
-      const res = await api.get(`/api/Deposito/${id}`);
-      reset({ nome: res.data.nome, endereco: res.data.endereco });
+      const res = await depositoService.get(id);
+      reset({ nome: res.nome, endereco: res.endereco });
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao carregar');
     } finally {
@@ -47,8 +47,8 @@ export default function DepositFormScreen() {
   const onSubmit = async (data: FormData) => {
     setLoading(true);
     try {
-      if (id) await api.put(`/api/Deposito/${id}`, data);
-      else await api.post('/api/Deposito', data);
+      if (id) await depositoService.update(id, data);
+      else await depositoService.create(data);
       Alert.alert('Sucesso', 'Dados salvos com sucesso');
     } catch (e: any) {
       Alert.alert('Erro', e.message || 'Falha ao salvar');
