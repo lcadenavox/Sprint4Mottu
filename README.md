@@ -1,5 +1,10 @@
 # Sprint4Mottu - Mobile (Expo + React Native)
 
+## Nomes dos integrantes
+- [Leonardo Cadena de Souza - rm557528]
+- [Julia Vasconcelos - rm558785]
+- [Davi Gonzaga - rm554890]
+
 Este app é a entrega intermediária da 3ª Sprint, com:
 - Login, Cadastro e Logout
 - Três funcionalidades completas integradas com a API (Motos, Mecânicos e Depósitos): Listar, Criar, Editar, Excluir
